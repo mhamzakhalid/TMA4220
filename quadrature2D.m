@@ -58,7 +58,7 @@ else
 end
 
 for i=1:Nq
-    T(i)=K*P(i)*g(x(i),y(i));
+    T(i)=P(i)*g(x(i),y(i));
     
 end
-I=sum(T);
+I=K*sum(T);
