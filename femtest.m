@@ -1,7 +1,7 @@
 clear
 
 
-n=3;
+n=2;
 % Returns uniform triangulation of unit square
 [X,Y] = meshgrid(0:1/n:1,0:1/n:1);
 X = reshape(X,[],1);
@@ -25,6 +25,16 @@ numtri = size(TR,1);
 trilabels = arrayfun(@(x) {sprintf('T%d', x)}, (1:numtri)');
 Htl = text(ic(:,1), ic(:,2), trilabels, 'FontWeight', 'bold', ...
    'HorizontalAlignment', 'center', 'Color', 'blue');
+
+
+%Right and Left Boundary Plot
+boundary = freeBoundary(TR);
+
+LeftBound = TR.Points(1:n+1,:);
+RightBound = TR.Points((n+1)*n+1:length(P),:);
+hold on
+plot(LeftBound(:,1),LeftBound(:,2),'g.','MarkerSize',20)
+plot(RightBound(:,1),RightBound(:,2),'r.','MarkerSize',20)
 hold off
 
 %Initial Values
@@ -32,9 +42,6 @@ S=zeros(length(P));
 M=zeros(length(P));
 F=zeros(length(P),1);
 
-%setting up the connectivity matrix(Not DONE!)
-%con = zeros(length(tri),3);
-%con(:,1:3) = tri(:,1:3);
 
 %Defining F
 f = @(x,y) (2*pi^2 + 1)*cos(pi*x)*sin(pi*y); 
