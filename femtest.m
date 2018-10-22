@@ -1,7 +1,7 @@
 clear
 
 
-n=2;
+n=12;
 % Returns uniform triangulation of unit square
 [X,Y] = meshgrid(0:1/n:1,0:1/n:1);
 X = reshape(X,[],1);
@@ -27,15 +27,6 @@ Htl = text(ic(:,1), ic(:,2), trilabels, 'FontWeight', 'bold', ...
    'HorizontalAlignment', 'center', 'Color', 'blue');
 
 
-%Right and Left Boundary Plot
-boundary = freeBoundary(TR);
-
-LeftBound = TR.Points(1:n+1,:);
-RightBound = TR.Points((n+1)*n+1:length(P),:);
-hold on
-plot(LeftBound(:,1),LeftBound(:,2),'g.','MarkerSize',20)
-plot(RightBound(:,1),RightBound(:,2),'r.','MarkerSize',20)
-hold off
 
 %Initial Values
 S=zeros(length(P));
@@ -55,6 +46,7 @@ for i=1:length(tri)
     G=Phi*mldivide(J,eye(2));
     %Setting up the stiffness matrix
     Ak=det(J)*(G*G')/2 ;
+    
     S(tri(i,:),tri(i,:))= S(tri(i,:),tri(i,:))+Ak;
     %Setting up the mass Matrix
     for mj=1:3
@@ -90,17 +82,33 @@ end
 
 %Implementing the Boundary Conditions
 %% 
-%BOUNDARY CONDITONS HAVE NOT BEEN IMPLEMENTED WORK ON CREATING EDGES AND
-
-%Applying Dirchlet 
+%BOUNDARY CONDITONS HAVE BEEN IMPLEMENTED WORK ON CREATING EDGES AND
+A=sparse(S+M);
+%Finding boundary nodes for Dirichlet Left and Right
+boundary = freeBoundary(TR);
+p=[boundary(1:n+1,1);boundary(2*n+1:3*n+1,1)]
+for i=1:length(p)
+    A(p(i,1),:)=0;
+    A(p(i,1),p(i,1))=1;
+    F(p(i,1))=0;
+end
 
 %% Solution
-A=sparse(S+M);
-U = gmres(A,F);
 
+
+U = A\F;
+%u=zeros(length(P),1);
+%u(n+2:n*(n+1))=U;
+u=reshape(U,[n+1,n+1]);
 % for j=1:length(U)
 % fprintf('V:%d -> %f\n',j,U(j));
 % end
 exact = cos(pi*X).*sin(pi*Y);
-%exact = reshape(exact,[n+1,n+1]);
-%error = norm(U - exact)
+exact = reshape(exact,[n+1,n+1]);
+error = norm(u - exact)
+ figure
+ mesh(u)
+ title('Numerical')
+ figure
+ mesh(exact)
+ title('exact')
