@@ -7,7 +7,8 @@ clc
 % testAffineMapping();
 % testComputeMesh();
 % plotErrorGaussLegendreQuadratures1D()
-plotErrorGaussLegendreQuadratures2D()
+% plotErrorGaussLegendreQuadratures2D()
+testBuildingMassAndStiffMatrix()
 %% Shape functions
 function testShapeFunctions()
     % Test for nodal basis:
@@ -69,10 +70,9 @@ function testAffineMapping()
 end
 
 %% Mesh
-
 function testComputeMesh()
-    Kx = 3;
-    Ky = 8;
+    Kx = 2;
+    Ky = 2;
     [elements, vertices] = computeMesh(Kx, Ky);
     figure
     hold on
@@ -114,4 +114,15 @@ function plotErrorGaussLegendreQuadratures2D()
     end
     semilogy(N,error,'*')
     disp(error)
+end
+
+%% Mass and Stiffness Matrix
+
+function testBuildingMassAndStiffMatrix()
+    Kx = 2;
+    Ky = 2;
+    [elements, vertices] = computeMesh(Kx, Ky);
+    [lhs, rhs] = computeLhsAndRhs(elements, vertices);
+    U = lhs\rhs;
+    disp(U);
 end

@@ -1,7 +1,7 @@
 clear
 
 
-n=12;
+n=2;
 % Returns uniform triangulation of unit square
 [X,Y] = meshgrid(0:1/n:1,0:1/n:1);
 X = reshape(X,[],1);
