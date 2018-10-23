@@ -1,12 +1,13 @@
 function integral = specialQuad2D(f, phi, v0, v1, v2, N) 
     [~, jacobian] = getAffineMapping(v0, v1, v2, [0;0], false);
     K = abs(det(jacobian))/2;
+    
     [ksi, omega] = getQuadratures(K, N);
     x = ksi(:,2:3)';
     integral = 0;
     for i = 1:size(x,2)
        xMapped = getAffineMapping(v0, v1, v2, x(:,i), false);
-       integral = integral + phi(xMapped(1), xMapped(2)) * f(x(1,i), x(2,i)) * omega(i);
+       integral = integral + phi(x(1,i), x(2,i)) * f(xMapped(1), xMapped(2)) * omega(i);
     end
 end
 

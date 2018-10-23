@@ -54,7 +54,7 @@ for i=1:length(tri)
     %Setting up the mass Matrix
     Mk = 2*det(J)*computeMiniMassMatrix();
     %Setting up the right hand side(NOT SURE ABOUT DET OF J)
-    Fk =2*det(J)*estimateRhs(P(tri(i,1),:), P(tri(i,2),:), P(tri(i,3),:),J); 
+    Fk =estimateRhs(P(tri(i,1),:), P(tri(i,2),:), P(tri(i,3),:),J); 
    %Transporting local matrix to the global matrix
             M(tri(i,:),tri(i,:)) = M(tri(i,:),tri(i,:))+Mk;
             F(tri(i,:),1) = F(tri(i,:),1) + Fk;
