@@ -1,6 +1,9 @@
 % maps from reference with inverse as "false", to reference with inverse as
 % "true".
 function [xMapped, jacobian] = getAffineMapping(v0, v1, v2, xNonMapped, inverse)
+    if ~(iscolumn(v0) && iscolumn(v1) && iscolumn(v2) && iscolumn(xNonMapped))
+        error('Vectors must be column vectors')
+    end
     if inverse
         jacInverse = getAffineMappingJacobianInverse(v0, v1, v2);
         jacobian = jacInverse;

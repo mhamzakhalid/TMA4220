@@ -1,7 +1,7 @@
 clear
 
 
-n=24;
+n=4;
 % Returns uniform triangulation of unit square
 [X,Y] = meshgrid(0:1/n:1,0:1/n:1);
 X = reshape(X,[],1);
@@ -84,7 +84,7 @@ u=reshape(U,[n+1,n+1]);
 exact = cos(pi*X).*sin(pi*Y);
 exact = reshape(exact,[n+1,n+1]);
 error = norm(u - exact)/n
-  figure
+ figure
  mesh(u)
  title('Numerical')
  figure

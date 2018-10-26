@@ -1,4 +1,7 @@
 function integral = gaussLegendreQuadratures2D(f, v0, v1, v2, N) 
+    if ~(iscolumn(v0) && iscolumn(v1) && iscolumn(v2))
+        error('Vectors must be column vectors')
+    end
     [~, jacobian] = getAffineMapping(v0, v1, v2, [0;0], false);
     K = abs(det(jacobian))/2;
     [ksi, omega] = getQuadratures(K, N);

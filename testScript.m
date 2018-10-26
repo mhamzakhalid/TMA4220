@@ -7,9 +7,9 @@ clc
 % testAffineMapping();
 % testComputeMesh();
 % plotErrorGaussLegendreQuadratures1D()
-plotErrorGaussLegendreQuadratures2D()
+% plotErrorGaussLegendreQuadratures2D()
 % testBuildingMassAndStiffMatrix()
-% testSpecialQuad2d()
+testSpecialQuad2d()
 %% Shape functions
 function testShapeFunctions()
     % Test for nodal basis:
