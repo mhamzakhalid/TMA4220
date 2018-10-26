@@ -7,7 +7,7 @@ function Mk = computeMiniMassMatrix()
     for mj=1:3
         for mi=1:3
             g =@(x,y) Phi{mj}(x,y) * Phi{mi}(x,y);
-            Mk(mj,mi) = gaussLegendreQuadratures2D(g,v0,v1,v2,6);
+            Mk(mj,mi) = gaussLegendreQuadratures2D(g,v0,v1,v2,7);
         end
     end
 end

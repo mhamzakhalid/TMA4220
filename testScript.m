@@ -8,7 +8,8 @@ clc
 % testComputeMesh();
 % plotErrorGaussLegendreQuadratures1D()
 % plotErrorGaussLegendreQuadratures2D()
-testBuildingMassAndStiffMatrix()
+% testBuildingMassAndStiffMatrix()
+% testSpecialQuad2d()
 %% Shape functions
 function testShapeFunctions()
     % Test for nodal basis:
@@ -44,7 +45,7 @@ function testAffineMapping()
     v1 = [3; 1];
     v2 = [3; 2];
     i = 1;
-    step = 0.01;
+    step = 0.007;
     xMapped = zeros(1,5146);
     yMapped = zeros(1,5146);
     for x = 0:step:1
@@ -55,7 +56,7 @@ function testAffineMapping()
             i = i + 1;
         end
     end
-    figure
+    h = figure;
     plot(xMapped,yMapped,"*b");
     hold on
     xHat = zeros(1,5146);
@@ -67,6 +68,10 @@ function testAffineMapping()
     end
     plot(xHat,yHat,"*r")
     legend("Mapped to K_0","Reference element")
+    set(gca,'fontsize', 16);
+    xlim([0,3]);
+    title('Test of Affine Mapping from k_0 to K')
+%     saveTightFigure(h,'Figures/testAffineMapping.pdf');
 end
 
 %% Mesh
@@ -97,7 +102,13 @@ function plotErrorGaussLegendreQuadratures1D()
     for N = 1:4
         error(N) = abs(gaussLegendreQuadratures1D(f,a,b,N) - analyticSol);
     end
+    h = figure;
     semilogy(1:4,error,'*')
+    xlabel('N_q')
+    ylabel('Error')    
+    set(gca,'fontsize', 16);
+    title('Error for quadrature approximation of \int_I exp(x)')
+%     saveTightFigure(h,'Figures/ErrorQuadratures1D.pdf');
     disp(error)
 end
 
@@ -108,11 +119,17 @@ function plotErrorGaussLegendreQuadratures2D()
     v2 = [3; 2];
     analyticSol = 1.16542;
     error = zeros(1,4);
-    N = [1, 3, 4, 6];
+    N = [1, 3, 4, 7];
     for i = 1:length(N)
         error(i) = abs(gaussLegendreQuadratures2D(f, v0, v1, v2, N(i)) - analyticSol);
     end
+    h = figure;
     semilogy(N,error,'*')
+    title('Error for quadrature approximation of \int_K log(x+y)')
+    xlabel('N_q')
+    ylabel('Error')
+    set(gca,'fontsize', 16);
+%     saveTightFigure(h,'Figures/ErrorQuadratures2D.pdf');
     disp(error)
 end
 
@@ -125,4 +142,16 @@ function testBuildingMassAndStiffMatrix()
     [lhs, rhs] = computeLhsAndRhs(elements, vertices);
     U = lhs\rhs;
     disp(U);
+end
+
+%% Special Quadrature
+function testSpecialQuad2d()
+    v0 = [0.5; 0.5];
+    v1 = [1; 0.5];
+    v2 = [0.5; 1];
+%     [xMapped, jacobian] = getAffineMapping(v0, v1, v2, [0;0], false);
+    AnalyticIntegral = -0.287082 - 0.52533 - 0.238248;
+    NumericalIntegral = estimateRhs(v0,v1,v2);
+    fprintf("Analytic: %f \nNumerical: %f\n",AnalyticIntegral, NumericalIntegral);
+    
 end

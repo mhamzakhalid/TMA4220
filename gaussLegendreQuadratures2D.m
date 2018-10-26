@@ -1,9 +1,13 @@
 function integral = gaussLegendreQuadratures2D(f, v0, v1, v2, N) 
+    if ~(iscolumn(v0) && iscolumn(v1) && iscolumn(v2))
+        error('Vectors must be column vectors')
+    end
     [~, jacobian] = getAffineMapping(v0, v1, v2, [0;0], false);
     K = abs(det(jacobian))/2;
     [ksi, omega] = getQuadratures(K, N);
     x = ksi(:,2:3)';
     integral = 0;
+    omega = omega./sum(omega);
     for i = 1:size(x,2)
        xMapped = getAffineMapping(v0, v1, v2, x(:,i), false);
        integral = integral + f(xMapped(1), xMapped(2)) * omega(i);
@@ -29,7 +33,7 @@ function [ksi, omega] = getQuadratures(K,N)
             d = -9/16 * K;
             e = 25/48 * K;
             omega = [d, e, e, e];
-        case 6
+        case 7
             a = 1/3;
             aip = (6 + sqrt(15)) / 21;
             aim = (6 - sqrt(15)) / 21;
