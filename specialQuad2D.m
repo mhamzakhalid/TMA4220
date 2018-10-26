@@ -34,7 +34,7 @@ function [ksi, omega] = getQuadratures(K,N)
             d = -9/16 * K;
             e = 25/48 * K;
             omega = [d, e, e, e];
-        case 6
+        case 7
             a = 1/3;
             aip = (6 + sqrt(15)) / 21;
             aim = (6 - sqrt(15)) / 21;
