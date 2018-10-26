@@ -4,6 +4,7 @@ function integral = gaussLegendreQuadratures2D(f, v0, v1, v2, N)
     [ksi, omega] = getQuadratures(K, N);
     x = ksi(:,2:3)';
     integral = 0;
+    omega = omega./sum(omega);
     for i = 1:size(x,2)
        xMapped = getAffineMapping(v0, v1, v2, x(:,i), false);
        integral = integral + f(xMapped(1), xMapped(2)) * omega(i);

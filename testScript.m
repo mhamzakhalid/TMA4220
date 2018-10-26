@@ -7,8 +7,9 @@ clc
 % testAffineMapping();
 % testComputeMesh();
 % plotErrorGaussLegendreQuadratures1D()
-% plotErrorGaussLegendreQuadratures2D()
-testBuildingMassAndStiffMatrix()
+plotErrorGaussLegendreQuadratures2D()
+% testBuildingMassAndStiffMatrix()
+% testSpecialQuad2d()
 %% Shape functions
 function testShapeFunctions()
     % Test for nodal basis:
@@ -125,4 +126,16 @@ function testBuildingMassAndStiffMatrix()
     [lhs, rhs] = computeLhsAndRhs(elements, vertices);
     U = lhs\rhs;
     disp(U);
+end
+
+%% Special Quadrature
+function testSpecialQuad2d()
+    v0 = [0.5; 0.5];
+    v1 = [1; 0.5];
+    v2 = [0.5; 1];
+%     [xMapped, jacobian] = getAffineMapping(v0, v1, v2, [0;0], false);
+    AnalyticIntegral = -0.287082 - 0.52533 - 0.238248;
+    NumericalIntegral = estimateRhs(v0,v1,v2);
+    fprintf("Analytic: %f \nNumerical: %f\n",AnalyticIntegral, NumericalIntegral);
+    
 end

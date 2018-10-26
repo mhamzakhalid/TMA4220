@@ -1,7 +1,7 @@
 clear
 
 
-n=2;
+n=24;
 % Returns uniform triangulation of unit square
 [X,Y] = meshgrid(0:1/n:1,0:1/n:1);
 X = reshape(X,[],1);
@@ -38,7 +38,7 @@ F=zeros(length(P),1);
 f = @(x,y) (2*pi^2 + 1)*cos(pi*x)*sin(pi*y); 
 %Barycentric coordinates
 %ADD THEM LATER
-
+miniMassMatrix = computeMiniMassMatrix();
 %Phi = [eye(2),-ones(2,1)]';
 Phi = [-ones(2,1),eye(2)]';
 for i=1:length(tri)
@@ -49,15 +49,15 @@ for i=1:length(tri)
     J = [v2(1) - v1(1) , v3(1) - v1(1);v2(2) - v1(2) , v3(2) - v1(2)];
     G=Phi*mldivide(J,eye(2));
     %Setting up the stiffness matrix
-    Ak=2*det(J)*(G*G') ;   
-    S(tri(i,:),tri(i,:))= S(tri(i,:),tri(i,:))+Ak;
+    Ak=det(J)/2*(G*G');
     %Setting up the mass Matrix
-    Mk = 2*det(J)*computeMiniMassMatrix();
+    Mk = det(J)*miniMassMatrix;
     %Setting up the right hand side(NOT SURE ABOUT DET OF J)
-    Fk =2*det(J)*estimateRhs(P(tri(i,1),:), P(tri(i,2),:), P(tri(i,3),:),J); 
+    Fk = estimateRhs(P(tri(i,1),:)', P(tri(i,2),:)', P(tri(i,3),:)'); 
    %Transporting local matrix to the global matrix
-            M(tri(i,:),tri(i,:)) = M(tri(i,:),tri(i,:))+Mk;
-            F(tri(i,:),1) = F(tri(i,:),1) + Fk;
+    S(tri(i,:),tri(i,:)) = S(tri(i,:),tri(i,:)) + Ak;
+    M(tri(i,:),tri(i,:)) = M(tri(i,:),tri(i,:)) + Mk;
+    F(tri(i,:),1) = F(tri(i,:),1) + Fk;
           
 end
 
@@ -83,7 +83,7 @@ u=reshape(U,[n+1,n+1]);
 
 exact = cos(pi*X).*sin(pi*Y);
 exact = reshape(exact,[n+1,n+1]);
-error = norm(u - exact)
+error = norm(u - exact)/n
   figure
  mesh(u)
  title('Numerical')
