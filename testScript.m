@@ -8,7 +8,6 @@ clc
 % testComputeMesh();
 % plotErrorGaussLegendreQuadratures1D()
 % plotErrorGaussLegendreQuadratures2D()
-% testBuildingMassAndStiffMatrix()
 % testSpecialQuad2d()
 %% Shape functions
 function testShapeFunctions()
@@ -131,17 +130,6 @@ function plotErrorGaussLegendreQuadratures2D()
     set(gca,'fontsize', 16);
 %     saveTightFigure(h,'Figures/ErrorQuadratures2D.pdf');
     disp(error)
-end
-
-%% Mass and Stiffness Matrix
-
-function testBuildingMassAndStiffMatrix()
-    Kx = 2;
-    Ky = 2;
-    [elements, vertices] = computeMesh(Kx, Ky);
-    [lhs, rhs] = computeLhsAndRhs(elements, vertices);
-    U = lhs\rhs;
-    disp(U);
 end
 
 %% Special Quadrature
