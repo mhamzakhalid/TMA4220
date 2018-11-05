@@ -29,10 +29,6 @@ tri(:,4:5) = [];
 % tetramesh(tet,P)
 
 
-%% Rod points
-rodindex = find(tet(:,5)==1001);
-vrod = tet(rodindex,:);
-Prod = P(vrod,:);
 
 %% Implementation
 
@@ -62,5 +58,16 @@ for i=1:size(tet,1)
        
 end
        
+%%  Boundary Conditions
+%Rod points
+rodindex = find(tet(:,5)==1001);
+vrod = tet(rodindex,1:4);
+Prod = P(vrod,:);
+%Surface Points
+vsurf = tri;
+%Dirichlet homogenoeus
+id = eye(size(A,1));
+A(vrod,:) = id(vrod,:);
+A(vsurf,:) = id(vsurf,:);
 
        
