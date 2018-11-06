@@ -86,15 +86,15 @@ rhs(vsurf,1)=220;
 
 
 %Euler
-tmax = 60;
-dt = tmax/100;
+tmax = 3600;
+dt = tmax/4000;
 sizet = length(0:dt:tmax);
-U = 20*ones(length(A),sizet);
-tol = 1e-9;
+U = 20*ones(length(A),sizet+2);
 %Initial Condition
 U(vrod,1)=220;
 U(vsurf,1)=220;
 for stp=1:sizet+1
+        fprintf('Finished %.2f percent\n',stp/(sizet))
         U(:,stp+1) = (M + dt*A)\(M*U(:,stp)+rhs*dt);
 end
 save('meshCakeVariables','U','P','vrod','vsurf','A','M')
