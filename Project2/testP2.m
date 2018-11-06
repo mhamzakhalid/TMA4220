@@ -96,3 +96,4 @@ U(vsurf,1)=220;
 for stp=1:sizet+1
         U(:,stp+1) = (M + dt*A)\(M*U(:,stp)+rhs*dt);
 end
+save('meshCakeVariables','U','P','vrod','vsurf','A','M')
