@@ -39,6 +39,7 @@ gradphi = [-1 -1 -1; eye(3)];
 
 for i=1:size(tet,1)
     %Vertices of Tetrahedrals
+    v = tet(i,1:4);
     v1 = tet(i,1);
     v2 = tet(i,2);
     v3 = tet(i,3);
@@ -49,11 +50,12 @@ for i=1:size(tet,1)
        P(v1,3)-P(v4,3),P(v2,3)-P(v4,3),P(v3,3)-P(v4,3)];
     G = gradphi*mldivide(J,eye(3));
     %Setting up the stiffness matrix
-    Ak = abs(det(J))/(6)*(G*G');
-    A(tet(i,1:4),tet(i,1:4)) =  A(tet(i,1:4),tet(i,1:4)) + Ak;
-    
-    %Setting Mass Matrix
+    %TO DO: Add Alpha for each tetrahedron
+    alpha = getPhysicalConstant('Aluminium');
+    Ak = alpha*abs(det(J))/(6)*(G*G');
     Mk = computeMiniMassMatrix(P(tet(i,1),:),P(tet(i,2),:)',P(tet(i,3),:)',P(tet(i,4),:))';
+    %Assembling from local to Global
+    A(tet(i,1:4),tet(i,1:4)) =  A(tet(i,1:4),tet(i,1:4)) + Ak;    
     M(tet(i,1:4),tet(i,1:4)) =  M(tet(i,1:4),tet(i,1:4)) + Mk;
        
 end
@@ -64,10 +66,32 @@ rodindex = find(tet(:,5)==1001);
 vrod = tet(rodindex,1:4);
 Prod = P(vrod,:);
 %Surface Points
-vsurf = tri;
-%Dirichlet homogenoeus
+vsurf = tri; 
+%Dirichlet in-homogenoeus
 id = eye(size(A,1));
 A(vrod,:) = id(vrod,:);
 A(vsurf,:) = id(vsurf,:);
+M(vrod,:) = id(vrod,:);
+M(vsurf,:) = id(vsurf,:);
+rhs=zeros(length(A),1);
+rhs(vrod,1)=20;
+rhs(vsurf,1)=20;
 
-       
+%Solving
+
+MA = M\A;
+Mrhs = M\rhs;
+
+%Euler
+dt = 1/5;
+sizet = length(0:dt:1);
+U = 20*ones(length(A),sizet);
+tol = 1e-9;
+%Initial Condition
+U(:,rodindex)=220;
+U(:,)
+for stp=1:sizet+1
+        U(:,stp+1) = U(:,stp) + dt*(-MA*U(:,stp)+ Mrhs); %Forward Euler
+
+end
+
