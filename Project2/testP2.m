@@ -1,4 +1,5 @@
-clear
+clear all
+close all
 clc
 
 %% adding geometry
@@ -64,23 +65,25 @@ end
 %Rod points
 rodindex = find(tet(:,5)==1001);
 vrod = tet(rodindex,1:4);
+vrod = reshape(vrod,1,[]);
+vrod = unique(vrod);
 Prod = P(vrod,:);
 %Surface Points
 vsurf = tri; 
+vsurf = reshape(vsurf,1,[]);
+vsurf = unique(vsurf);
 %Dirichlet in-homogenoeus
 id = eye(size(A,1));
 A(vrod,:) = id(vrod,:);
 A(vsurf,:) = id(vsurf,:);
-M(vrod,:) = id(vrod,:);
-M(vsurf,:) = id(vsurf,:);
+
 rhs=zeros(length(A),1);
-rhs(vrod,1)=20;
-rhs(vsurf,1)=20;
+rhs(vrod,1)=220;
+rhs(vsurf,1)=220;
 
 %Solving
 
-MA = M\A;
-Mrhs = M\rhs;
+
 
 %Euler
 dt = 1/5;
@@ -88,10 +91,8 @@ sizet = length(0:dt:1);
 U = 20*ones(length(A),sizet);
 tol = 1e-9;
 %Initial Condition
-U(:,rodindex)=220;
-U(:,)
+U(vrod,1)=220;
+U(vsurf,1)=220;
 for stp=1:sizet+1
-        U(:,stp+1) = U(:,stp) + dt*(-MA*U(:,stp)+ Mrhs); %Forward Euler
-
+        U(:,stp+1) = (M + dt*A)\(M*U(:,stp)+rhs*dt);
 end
-
