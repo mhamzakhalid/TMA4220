@@ -86,8 +86,9 @@ rhs(vsurf,1)=220;
 
 
 %Euler
-dt = 1/5;
-sizet = length(0:dt:1);
+tmax = 60;
+dt = tmax/100;
+sizet = length(0:dt:tmax);
 U = 20*ones(length(A),sizet);
 tol = 1e-9;
 %Initial Condition
