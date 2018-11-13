@@ -2,10 +2,11 @@ clear all
 close all
 clc
 load('meshCakeVariables.mat');
-dt = 3600/4000;
 %% Plot time
 figure
-for time = 1:40:4000
+dt = 3600/size(U,2);
+stepSize = floor(size(U,2)/40);
+for time = 1:stepSize:size(U,2)
     contourSlice(P,U,vsurf, vrod, time)
     str_title = sprintf('Time = %.0f seconds',abs(time*dt-1));
     title(str_title)
