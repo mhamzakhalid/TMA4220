@@ -1,4 +1,4 @@
-function contourSlice(P,U,vsurf, vrod, time)
+function contourSlice(P, U, time)
     pTemp = P;
     uTemp = U(:,time);
     F = scatteredInterpolant(pTemp,uTemp,'natural','none');

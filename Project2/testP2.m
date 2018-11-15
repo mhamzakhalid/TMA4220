@@ -86,15 +86,22 @@ rhs(vsurf,1)=220;
 
 
 %Euler
-tmax = 3600;
-dt = tmax/4000;
-sizet = length(0:dt:tmax);
-U = 20*ones(length(A),sizet+2);
-%Initial Condition
-U(vrod,1)=220;
-U(vsurf,1)=220;
-for stp=1:sizet+1
-        fprintf('Finished %.4f percent\n',stp/(sizet))
-        U(:,stp+1) = (M + dt*A)\(M*U(:,stp)+rhs*dt);
+tmax = 3600*3;
+steps = 4000*3;
+dt = tmax/steps;
+%Initial Condition:
+Uall = 20*ones(length(A),steps+1);
+Uall(vrod,1)=220;
+Uall(vsurf,1)=220;
+for stp=1:steps
+        fprintf('Finished %.4f percent\n',stp/steps)
+        Uall(:,stp+1) = (M + dt*A)\(M*Uall(:,stp)+rhs*dt);
 end
-save('meshCakeVariables2','U','P','vrod','vsurf','A','M')
+savePrecision = 10;
+U = zeros(length(A),floor(steps/savePrecision));
+count = 1;
+for i = 1:savePrecision:size(Uall,2)
+    U(:,count) = Uall(:,i);
+    count = count + 1;
+end
+save('meshCakeVariablesDough','U','P','A','M','tmax','savePrecision')

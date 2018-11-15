@@ -7,7 +7,7 @@ figure
 dt = 3600/size(U,2);
 stepSize = floor(size(U,2)/40);
 for time = 1:stepSize:size(U,2)
-    contourSlice(P,U,vsurf, vrod, time)
+    contourSlice(P, U, time)
     str_title = sprintf('Time = %.0f seconds',abs(time*dt-1));
     title(str_title)
     pause(0.01)
@@ -18,7 +18,7 @@ end
 time = [1, 20, 10, 200];
 for i = 1:4
     h = figure;
-    contourSlice(P,U,vsurf, vrod, time(i))
+    contourSlice(P, U, time(i))
     str_title = sprintf('Time = %.0f seconds',abs(time(i)*dt-1));
     title(str_title)
 end
