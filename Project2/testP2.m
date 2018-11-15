@@ -76,6 +76,8 @@ vsurf = unique(vsurf);
 id = eye(size(A,1));
 A(vrod,:) = id(vrod,:);
 A(vsurf,:) = id(vsurf,:);
+M(vrod,:) = 0;
+M(vsurf,:) = 0;
 
 rhs=zeros(length(A),1);
 rhs(vrod,1)=220;
