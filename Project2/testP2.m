@@ -52,7 +52,7 @@ for i=1:size(tet,1)
     G = gradphi*mldivide(J,eye(3));
     %Setting up the stiffness matrix
     %TO DO: Add Alpha for each tetrahedron
-    alpha = getPhysicalConstant('Dough');
+    alpha = getPhysicalConstant('Dough2');
     Ak = alpha*abs(det(J))/(6)*(G*G');
     Mk = computeMiniMassMatrix(P(tet(i,1),:),P(tet(i,2),:)',P(tet(i,3),:)',P(tet(i,4),:))';
     %Assembling from local to Global
@@ -106,4 +106,4 @@ for i = 1:savePrecision:size(Uall,2)
     U(:,count) = Uall(:,i);
     count = count + 1;
 end
-save('meshCakeVariablesDough','U','P','A','M','tmax','savePrecision')
+save('meshCakeVariablesDough2','U','P','A','M','tmax','savePrecision')
