@@ -1,4 +1,5 @@
-clear
+clear all
+close all
 clc
 
 %% adding geometry
@@ -51,7 +52,7 @@ for i=1:size(tet,1)
     G = gradphi*mldivide(J,eye(3));
     %Setting up the stiffness matrix
     %TO DO: Add Alpha for each tetrahedron
-    alpha = getPhysicalConstant('Aluminium');
+    alpha = getPhysicalConstant('Dough2');
     Ak = alpha*abs(det(J))/(6)*(G*G');
     Mk = computeMiniMassMatrix(P(tet(i,1),:),P(tet(i,2),:)',P(tet(i,3),:)',P(tet(i,4),:))';
     %Assembling from local to Global
@@ -64,34 +65,45 @@ end
 %Rod points
 rodindex = find(tet(:,5)==1001);
 vrod = tet(rodindex,1:4);
+vrod = reshape(vrod,1,[]);
+vrod = unique(vrod);
 Prod = P(vrod,:);
 %Surface Points
 vsurf = tri; 
+vsurf = reshape(vsurf,1,[]);
+vsurf = unique(vsurf);
 %Dirichlet in-homogenoeus
 id = eye(size(A,1));
 A(vrod,:) = id(vrod,:);
 A(vsurf,:) = id(vsurf,:);
-M(vrod,:) = id(vrod,:);
-M(vsurf,:) = id(vsurf,:);
+M(vrod,:) = 0;
+M(vsurf,:) = 0;
+
 rhs=zeros(length(A),1);
-rhs(vrod,1)=20;
-rhs(vsurf,1)=20;
+rhs(vrod,1)=220;
+rhs(vsurf,1)=220;
 
 %Solving
 
-MA = M\A;
-Mrhs = M\rhs;
+
 
 %Euler
-dt = 1/5;
-sizet = length(0:dt:1);
-U = 20*ones(length(A),sizet);
-tol = 1e-9;
-%Initial Condition
-U(:,rodindex)=220;
-U(:,)
-for stp=1:sizet+1
-        U(:,stp+1) = U(:,stp) + dt*(-MA*U(:,stp)+ Mrhs); %Forward Euler
-
+tmax = 3600*3;
+steps = 4000*3;
+dt = tmax/steps;
+%Initial Condition:
+Uall = 20*ones(length(A),steps+1);
+Uall(vrod,1)=220;
+Uall(vsurf,1)=220;
+for stp=1:steps
+        fprintf('Finished %.4f percent\n',stp/steps)
+        Uall(:,stp+1) = (M + dt*A)\(M*Uall(:,stp)+rhs*dt);
 end
-
+savePrecision = 10;
+U = zeros(length(A),floor(steps/savePrecision));
+count = 1;
+for i = 1:savePrecision:size(Uall,2)
+    U(:,count) = Uall(:,i);
+    count = count + 1;
+end
+save('meshCakeVariablesDough2','U','P','A','M','tmax','savePrecision')
