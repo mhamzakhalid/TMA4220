@@ -18,6 +18,10 @@ end
 error = abs(numerical - analytic);
 figure
 semilogy(N,error,'*-')
+xlabel('N')
+ylabel('Error')
+title('Error plot \int_k e^x dx dy dz')
+set(gca,'fontsize',16)
 %% 
 clear all
 close all 
