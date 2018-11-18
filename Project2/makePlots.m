@@ -6,12 +6,50 @@ clc
 figure
 dt = tmax/size(U,2);
 stepSize = floor(size(U,2)/40);
-for time = 1:stepSize:size(U,2)
+createGif = false;
+if createGif
+    filename = 'cookingPrincessCake.gif';
+    contourSlice(P, U, 1)
+    str_title = sprintf('Time = %.0f seconds',abs(time*dt-1));
+    title(str_title)
+    xlabel('dm')
+    ylabel('dm')
+    zlabel('dm')
+    set(gca,'fontsize', 16);
+    gif(filename,'DelayTime',0.2,'LoopCount',5,'frame',gcf);
+end
+for time = stepSize:stepSize:size(U,2)
     contourSlice(P, U, time)
     str_title = sprintf('Time = %.0f seconds',abs(time*dt-1));
     title(str_title)
+    xlabel('dm')
+    ylabel('dm')
+    zlabel('dm')
+    set(gca,'fontsize', 16);
     pause(0.01)
+    if createGif
+        gif
+    end
     clf
+end
+
+%% Plot four different times DoughDm
+load('meshCakeVariablesDoughDm.mat')
+load('boundary.mat')
+dt = tmax/size(U,2);
+time = [1, 300, 850, 1001];
+for i = 1:4
+    h = figure;
+    contourSlice(P, U, time(i))
+    str_title = sprintf('Dough at time = %.0f minutes',abs(time(i)*dt-1)/60);
+    title(str_title)
+    set(gca,'fontsize', 16);
+    uTemp = U(:,time(i));
+    uTemp(vsurf,:) = 0;
+    uTemp(vrod,:) = 0;
+    uTemp = uTemp(any(uTemp,2),:);
+    fprintf('Mean temperature of cake is %.1f degrees. Minimum temperature is %.1f\n\n'...
+        ,mean(uTemp),min(uTemp));
 end
 
 %% Plot four different times Dough

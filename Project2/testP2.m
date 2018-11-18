@@ -52,7 +52,7 @@ for i=1:size(tet,1)
     G = gradphi*mldivide(J,eye(3));
     %Setting up the stiffness matrix
     %TO DO: Add Alpha for each tetrahedron
-    alpha = getPhysicalConstant('Dough2');
+    alpha = getPhysicalConstant('DoughDm');
     Ak = alpha*abs(det(J))/(6)*(G*G');
     Mk = computeMiniMassMatrix(P(tet(i,1),:),P(tet(i,2),:)',P(tet(i,3),:)',P(tet(i,4),:))';
     %Assembling from local to Global
@@ -88,8 +88,8 @@ rhs(vsurf,1)=220;
 
 
 %Euler
-tmax = 3600*3;
-steps = 4000*3;
+tmax = 1200;
+steps = 1000;
 dt = tmax/steps;
 %Initial Condition:
 Uall = 20*ones(length(A),steps+1);
@@ -99,11 +99,15 @@ for stp=1:steps
         fprintf('Finished %.4f percent\n',stp/steps)
         Uall(:,stp+1) = (M + dt*A)\(M*Uall(:,stp)+rhs*dt);
 end
-savePrecision = 10;
-U = zeros(length(A),floor(steps/savePrecision));
-count = 1;
-for i = 1:savePrecision:size(Uall,2)
-    U(:,count) = Uall(:,i);
-    count = count + 1;
+savePrecision = 1;
+if savePrecision == 1
+    U = Uall;
+else
+    U = zeros(length(A),floor(steps/savePrecision));
+    count = 1;
+    for i = 1:savePrecision:size(Uall,2)
+        U(:,count) = Uall(:,i);
+        count = count + 1;
+    end
 end
-save('meshCakeVariablesDough2','U','P','A','M','tmax','savePrecision')
+save('meshCakeVariablesDoughDm','U','P','A','M','tmax','savePrecision')

@@ -15,6 +15,8 @@ function alpha = getPhysicalConstant(elementType)
             rho = 1100;
             cp = 1760;
             alpha = k / (rho*cp);
+        case 'DoughDm'
+            alpha = getPhysicalConstant('Dough')*10^2;
         otherwise
             error('Only Aluminium and Dough are supported')
     end
