@@ -6,7 +6,7 @@ clc
 figure
 dt = tmax/size(U,2);
 stepSize = floor(size(U,2)/40);
-createGif = true;
+createGif = false;
 if createGif
     filename = 'cookingPrincessCake.gif';
     contourSlice(P, U, 1)
@@ -108,7 +108,7 @@ set(gca,'fontsize', 16);
 
 figure
 contourSlice(P, UDough, doughNum)
-str_title = sprintf('Dough at time = %.0f seconds with \\alpha = %.2e.',abs(doughNum*dtDough-1),alphaDough);
+str_title = sprintf('Dough at time = %.0f minutes with \\alpha = %.2e.',abs(doughNum*dtDough-1)/60,alphaDough);
 title(str_title);
 xlabel('m')
 ylabel('m')
