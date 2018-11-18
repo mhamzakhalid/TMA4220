@@ -44,6 +44,9 @@ for i = 1:4
     str_title = sprintf('Dough at time = %.0f minutes',abs(time(i)*dt-1)/60);
     title(str_title)
     set(gca,'fontsize', 16);
+    xlabel('dm')
+    ylabel('dm')
+    zlabel('dm')
     uTemp = U(:,time(i));
     uTemp(vsurf,:) = 0;
     uTemp(vrod,:) = 0;
