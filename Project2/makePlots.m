@@ -6,21 +6,22 @@ clc
 figure
 dt = tmax/size(U,2);
 stepSize = floor(size(U,2)/40);
-createGif = false;
+createGif = true;
 if createGif
     filename = 'cookingPrincessCake.gif';
     contourSlice(P, U, 1)
-    str_title = sprintf('Time = %.0f seconds',abs(time*dt-1));
+    str_title = sprintf('Time = %.1f minutes',0);
     title(str_title)
     xlabel('dm')
     ylabel('dm')
     zlabel('dm')
     set(gca,'fontsize', 16);
-    gif(filename,'DelayTime',0.2,'LoopCount',5,'frame',gcf);
+    gif(filename,'DelayTime',0.3,'LoopCount',5,'frame',gcf);
 end
 for time = stepSize:stepSize:size(U,2)
+    clf
     contourSlice(P, U, time)
-    str_title = sprintf('Time = %.0f seconds',abs(time*dt-1));
+    str_title = sprintf('Time = %.1f minutes',abs(time*dt-1)/60);
     title(str_title)
     xlabel('dm')
     ylabel('dm')
@@ -30,7 +31,6 @@ for time = stepSize:stepSize:size(U,2)
     if createGif
         gif
     end
-    clf
 end
 
 %% Plot four different times DoughDm
@@ -101,12 +101,18 @@ figure
 contourSlice(P, UAlu, aluNum)
 str_title = sprintf('Aluminium at time = %.0f seconds with \\alpha = %.2e.',abs(aluNum*dtAlu-1),alphaAlu);
 title(str_title);
+xlabel('m')
+ylabel('m')
+zlabel('m')
 set(gca,'fontsize', 16);
 
 figure
 contourSlice(P, UDough, doughNum)
 str_title = sprintf('Dough at time = %.0f seconds with \\alpha = %.2e.',abs(doughNum*dtDough-1),alphaDough);
 title(str_title);
+xlabel('m')
+ylabel('m')
+zlabel('m')
 set(gca,'fontsize', 16);
 
 %%
